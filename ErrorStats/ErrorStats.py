@@ -11,12 +11,15 @@ from pysam import VariantFile
 
 vcf_in = VariantFile("pfda_HG001_GRCh37_02152019_182915.vcf.gz")  # auto-detect input format
 vcf_no_calls = VariantFile("NoCalls.vcf", 'w', header=vcf_in.header)
-vcf_genotype = VariantFile("NoCalls.vcf", 'w', header=vcf_in.header)
+vcf_genotype = VariantFile("Genotype.vcf", 'w', header=vcf_in.header)
 
 i=0
 for rec in vcf_in.fetch():
-    if i == 1:
+    if i == 0:
+        continue
+    if i == 2:
         break
     vcf_no_calls.write(rec)
     vcf_genotype.write(rec)
+    
     i+=1
