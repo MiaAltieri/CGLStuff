@@ -9,7 +9,7 @@ from pysam import VariantFile
 
 # Step 1: Split the VCF into two files 
 
-vcf_in = VariantFile("pfda_HG001_GRCh37_02152019_182915.vcf.gz")  # auto-detect input format
+vcf_in = VariantFile("friday_hg002_grch37.vcf.gz")  # auto-detect input format
 vcf_no_calls = VariantFile("NoCalls.vcf", 'w', header=vcf_in.header)
 vcf_genotype = VariantFile("Genotype.vcf", 'w', header=vcf_in.header)
 
