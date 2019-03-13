@@ -1,0 +1,33 @@
+This directory ErrorStats serves the purpose to gather statitics on errors made in variant calling. The two python files:
+	ErrorStats.py & DeepVarFridayComparision.py
+serve the purpose of looking at .vcf.gz files and gathering information error information inside them. For that reason they will only take .vcf.gz files that are produced from hap.py output. 
+
+NOTE: 
+these files require that you have:
+- pysam
+- seaborn
+- pandas
+
+
+DESCRIPTION OF FILES:
+	ErrorStats.py 
+		Analyzes mistakes in false negatives and compares false negatives as the result of nocalls or miss genotyping. 
+
+		INPUTS: a single vcf
+
+		OUTPUTS: several graphics as a result as well as two .vcf files one NoCalls.vcf and Genotypes.vcf, which have the vcf lines where errors of that type were made
+
+		RUN WITH: python ErrorStats.py "filename"
+
+
+	DeepVarFridayComparision.py
+		Analyzes mistakes in false negatives between two models to see which model misses which errors and which errors both models make
+
+		INPUTS: two vcfs from the same sample, but from diffent models
+
+		OUTPUTS: a single graph as a result as well as three .vcf files: DeepVariantOnly.vcf, FridayOnly.vcf, and Both.vcf, which have the vcf lines where errors where made. 
+			DeepVariantOnly.vcf - has errors that only DeepVariant made
+			FridayOnly.vcf - has errors that only Friday made
+			Both.vcf - has errors that both made
+
+		RUN WITH: python DeepVarFridayComparision.py "filename" "filename" 

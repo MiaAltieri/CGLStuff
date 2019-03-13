@@ -4,13 +4,27 @@
 Created on Wed Feb 27 15:18:47 2019
 
 @author: miaaltieri
+
+ran with both:
+    deepvariant_hg002_grch37.vcf.gz
+    friday_hg002_grch37.vcf.gz 
 """
 from pysam import VariantFile
 import seaborn as sns
 import pandas as pd
+import sys
+
+# Step 0: Check inputs
+if len(sys.argv) != 2:
+    print("EROR: missing the required vcf file")
+    print("      file should be: of the form .vcf.gz")
+    sys.exit()
+    
+filename = sys.argv[1]
+# End Step 0
 
 # Step 1: Split the VCF into two files 
-vcf_in = VariantFile("friday_hg002_grch37.vcf.gz")  # auto-detect input format
+vcf_in = VariantFile(filename)  # auto-detect input format
 vcf_no_calls = VariantFile("NoCalls.vcf", 'w', header=vcf_in.header)
 vcf_genotype = VariantFile("Genotype.vcf", 'w', header=vcf_in.header)
 
@@ -27,7 +41,6 @@ for rec in vcf_in.fetch():
 
 # Step 2: Iterate through nocalls and genotype and create dictionaries to
 # count which chromosomes have which errors
-            
 vcf_no_calls = VariantFile("NoCalls.vcf")
 vcf_genotype = VariantFile("Genotype.vcf")
 
@@ -46,8 +59,6 @@ for rec in vcf_genotype.fetch():
        genotype_errors[chrom] = 0
     genotype_errors[chrom] =  genotype_errors[chrom] + 1
     
-# End Step 2
-    
 no_call_total = 0
 for key in no_calls_errors:
     no_call_total += no_calls_errors[key]
@@ -56,16 +67,9 @@ genotype_total = 0
 for key in genotype_errors:
     genotype_total += genotype_errors[key]
     
-print(no_call_total)
-print(genotype_total)
-print()
+# End Step 2
 
-print(no_calls_errors)
-print(genotype_errors)
-
-    
 # Step 3: create seaborn graphs based on these results
-
 # VERSION A: This gives you two different graphs for each type
 data_as_dict = {}
 chrom_vals = []
@@ -171,18 +175,4 @@ g.fig.set_size_inches(20,8)
 g.set(ylim=(0,15))
 axes = g.axes.flatten()
 axes[0].set_title('Comparing No Call with Genotype Error Rates by Percent of Total Errors')
-
-
-
-
-
-
-"""
-idea: for seaborn, show the raw amount of errors, but also the percent of calls
-missed for a chrom, this would invole you talling the amount of chromosomes total
-in vcf_in, and then taking those errors 
-
-same idea as above but instead its percentage of total errors
-
-other idea see if INDELS or SNPs
-"""
+# End Step 3
